@@ -42,20 +42,19 @@ check the status using:
 
     composer-cli compose status
 
-When the image has a status of FINISHED, download its contents
-using:
-
-    composer-cli compose image IMAGE_UUID
-
-Use command completion by just pressing the TAB key for the appropriate
-IMAGE_UUID to appear.
-
-Create a directory to hold the expanded content as well as the needed kickstart file by doing the following:
+When the image has a status of FINISHED, create a directory to hold
+the expanded content as well as the needed kickstart file. Download
+its contents using:
 
     mkdir -p 0.0.1
     cd 0.0.1
+    composer-cli compose image IMAGE_UUID
+
+Use command completion by just pressing the TAB key for the appropriate
+IMAGE_UUID to appear. Copy the `edge.ks` file to the new directory
+and extract the tar file for the image.
+
     cp ../edge.ks .
-    cp ../*.tar .
     tar xf  *.tar
 
 After the content is expanded, the directory will have a `compose.json`
@@ -106,19 +105,17 @@ The output will look something like this:
            0.0.2 rhel-edge-commit 2147483648
 
 We want to work with the UUID matching the `0.0.2` version of the
-image build. Download its contents for the new image using:
-
-    composer-cli compose image IMAGE_UUID
-
-Use command completion by just pressing the TAB key and selecting
+image build. For the `composer-cli compose image` command below,
+use command completion by just pressing the TAB key and selecting
 the UUID matching version `0.0.2` as shown above.
-
-Create a directory to hold the expanded content as well as the
-needed kickstart file by doing the following:
 
     mkdir -p 0.0.2
     cd 0.0.2
+    composer-cli compose image IMAGE_UUID
+
+Copy the `edge.ks` file to the new directory and extract the tar
+file for the image.
+
     cp ../edge.ks .
-    cp ../*.tar .
     tar xf  *.tar
 
