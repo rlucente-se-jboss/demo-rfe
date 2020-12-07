@@ -1,0 +1,17 @@
+name = "RFE"
+description = "RHEL for Edge"
+version = "0.0.1"
+packages = []
+modules = []
+groups = []
+
+[customizations]
+
+[customizations.firewall]
+ports = ["8080:tcp"]
+
+[[customizations.user]]
+name = "core"
+description = "Admin User"
+password = "$6$mVr4oO8bplj3YKYF$33PCPMGScgxgdbOiawmcp9xRTLb4M5hs7yZ3Xt02meyPqeC1WKVBNP.mY/lFPoD0LxPUVtNHFEr9lkBn/lcIo1"
+groups = ["wheel"]
