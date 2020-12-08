@@ -62,6 +62,10 @@ file in addition to the ostree repository. Review the JSON file and
 copy the `ostree-commit` value to the clipboard. You'll use that
 when creating an image derived from this one in the web console.
 
+The list of rpm packages included in the commit can be listed via:
+
+    rpm-ostree db list rhel/8/x86_64/edge --repo=repo
+
 Create the second image using the web console. Browse to
 `https://YOUR-HOST-NAME:9090` and log in as a user with admin
 privileges (or at least a member of the `weldr` group). Once you're
@@ -118,4 +122,8 @@ file for the image.
 
     cp ../edge.ks .
     tar xf  *.tar
+
+The list of rpm packages included in the commit can be listed via:
+
+    rpm-ostree db list rhel/8/x86_64/edge --repo=repo
 
