@@ -86,9 +86,9 @@ blueprint.
 You'll be asked to confirm the commit so just select "Commit" again.
 Next, select "Create Image" to kickoff a build of the image. In the
 dialog, select `RHEL for Edge Commit (.tar)` for the Type field and
-paste the UUID from the prior image in the Parent commit field. The
-UUID is the ostree-commit value you copied into the clipboard
-earlier. Select the "Create" button to kick off the image build.
+paste the `ostree-commit` value you copied into the clipboard into
+the Parent commit field. Select the "Create" button to kick off the
+image build.
 
 ![Create Image](/images/create-image.png)
 
