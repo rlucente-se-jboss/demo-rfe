@@ -124,13 +124,12 @@ cat > /etc/systemd/system/container-httpd.service <<EOF
 [Unit]
 Description=Podman container-httpd.service
 Documentation=man:podman-generate-systemd(1)
-Wants=network.target
+Requires=network.target
 After=network-online.target
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
-RestartSec=2
 ExecStartPre=/bin/rm -f %t/container-httpd.pid %t/container-httpd.ctr-id
 ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-httpd.pid --cidfile %t/container-httpd.ctr-id --cgroups=no-conmon --replace -d --label io.containers.autoupdate=image --name httpd -p 8080:80 192.168.1.100:5000/httpd:prod
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-httpd.ctr-id -t 10
