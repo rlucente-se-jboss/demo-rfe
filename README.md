@@ -9,13 +9,15 @@ Start with a minimal install of RHEL 8.3+. Make sure this repository
 is on the host using either `git` or `scp` this directly. Make sure
 the `demo.conf` script has your Red Hat Subscription Manager (RHSM)
 credentials to login to the [customer support portal](https://access.redhat.com)
-and pull updated content. Use the following scripts to build the
-needed environment.
+and pull updated content. Also, make sure the IP addresses in the
+demo.conf file match both your build server and your intended edge
+host. Use the following scripts to build the needed environment.
 
-    sudo ./setup-rhel8.sh
+    cd ~/demo-rfe
+    sudo ./01-setup-rhel8.sh
     reboot
-    sudo ./config-image-builder.sh
-    ./build-images.sh
+    sudo ./02-config-image-builder.sh
+    ./03-build-containers.sh
 
 The above scripts do the following:
 * subscribe to Red Hat for updates
@@ -46,15 +48,15 @@ When the image has a status of FINISHED, create a directory to hold
 the expanded content as well as the needed kickstart file. Download
 its contents using:
 
-    mkdir -p 0.0.1
-    cd 0.0.1
+    mkdir -p ~/0.0.1
+    cd ~/0.0.1
     composer-cli compose image IMAGE_UUID
 
 Use command completion by just pressing the TAB key for the appropriate
-IMAGE_UUID to appear. Copy the `edge.ks` file to the new directory
+IMAGE_UUID to appear. Link the `edge.ks` file to the new directory
 and extract the tar file for the image.
 
-    cp ../edge.ks .
+    ln -s ../demo-rfe/edge.ks .
     tar xf  *.tar
 
 After the content is expanded, the directory will have a `compose.json`
@@ -99,7 +101,7 @@ image build.
 The build will take between five and ten minutes to complete. Once
 it's finished, list the image UUIDs on the command line using:
 
-    composer compose status
+    composer-cli compose status
 
 The output will look something like this:
 
@@ -113,17 +115,33 @@ image build. For the `composer-cli compose image` command below,
 use command completion by just pressing the TAB key and selecting
 the UUID matching version `0.0.2` as shown above.
 
-    mkdir -p 0.0.2
-    cd 0.0.2
+    mkdir -p ~/0.0.2
+    cd ~/0.0.2
     composer-cli compose image IMAGE_UUID
 
-Copy the `edge.ks` file to the new directory and extract the tar
+Link the `edge.ks` file to the new directory and extract the tar
 file for the image.
 
-    cp ../edge.ks .
+    ln -s ../edge.ks .
     tar xf  *.tar
 
 The list of rpm packages included in the commit can be listed via:
 
     rpm-ostree db list rhel/8/x86_64/edge --repo=repo
+
+## Demo
+You're now ready to demonstrate this capability. On the server where
+you built the images, go to the 0.0.1 folder which holds the initial
+build and run a simple web server to offer that content to clients:
+
+    python3 -m http.server 8000
+
+In a separate terminal launch another VM using the rhel-8.3-x86_64-boot.iso
+and then press tab at the installation screen to customize the
+installation. Append the following to the end of the command line:
+
+    inst.ks=http://BUILD-HOST-IP:8000/edge.ks
+
+where `BUILD-HOST-IP` matches the address of your build server with
+the ostree content.
 
