@@ -140,7 +140,7 @@ In a separate terminal launch another VM using the rhel-8.3-x86_64-boot.iso
 and then press tab at the installation screen to customize the
 installation. Append the following to the end of the command line:
 
-    inst.ks=http://BUILD-HOST-IP:8000/edge.ks
+    inst.ks=http://BUILD-HOST-IP:8000/edge.ks ip.method=dhcp
 
 where `BUILD-HOST-IP` matches the address of your build server with
 the ostree content.
