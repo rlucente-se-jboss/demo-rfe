@@ -83,6 +83,12 @@ systemctl enable rpm-ostreed-automatic.timer applyupdate.timer
 %end
 
 %post
+
+##
+## Create a service and time to periodically check if the container
+## image has been updated and then, if so, refresh the workload
+##
+
 #Add a podman autoupdate timer & service
 
 # podman auto-update looks up containers with a specified
@@ -108,13 +114,14 @@ ExecStart=/usr/bin/podman auto-update
 WantedBy=multi-user.target default.target
 EOF
 
-# The podman auto-update is run daily within a two-hour randomized window to
-# reduce system load
+# The podman auto-update is run every minute
 cat > /etc/systemd/system/podman-auto-update.timer << EOF
 [Unit]
 Description=Podman auto-update timer
 
 [Timer]
+# This example runs the podman auto-update daily within a two-hour
+# randomized window to reduce system load
 #OnCalendar=daily
 #Persistent=true
 #RandomizedDelaySec=7200
@@ -126,6 +133,11 @@ OnUnitActiveSec=60
 [Install]
 WantedBy=timers.target
 EOF
+
+##
+## Create a service to launch the container workload and restart
+## on failure
+##
 
 #create a unit file to run our example workload
 cat > /etc/systemd/system/container-httpd.service <<EOF
@@ -167,12 +179,25 @@ systemctl enable podman-auto-update.timer container-httpd.service
 %end
 
 %post
+
+##
+## Create a greenboot script to determine if an upgrade should
+## succeed or rollback. At startup, the script writes the ostree commit
+## hash to both the file orig.txt, if it doesn't already exist, and
+## current.txt, whether it exists or not. The two files are then
+## compared. If they are different, the upgrade fails after three
+## attempts and the ostree image is rolled back. A successful upgrade
+## is controlled by deleting the orig.txt file prior to the upgrade
+## attempt.
+##
+ 
 mkdir -p /etc/greenboot/check/required.d
 cat > /etc/greenboot/check/required.d/01_fail_upgrade.sh <<EOF
 #!/bin/bash
 
 #
-# This test fails if the current commit is different than the original commit
+# This test fails if the current commit is different than the
+# original commit
 #
 
 if [ ! -f /etc/greenboot/orig.txt ]
