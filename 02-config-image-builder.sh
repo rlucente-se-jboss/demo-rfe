@@ -25,9 +25,5 @@ firewall-cmd --reload
 
 # prep the edge.ks file
 cat edge.ks.orig | \
-    sed "s/__HOST_IP__/$HOST_IP/g" | \
-    sed "s/__EDGE_IP__/$EDGE_IP/g" | \
-    sed "s/__EDGE_MASK__/$EDGE_MASK/g" | \
-    sed "s/__EDGE_GW__/$EDGE_GW/g" | \
-    sed "s/__EDGE_DNS__/$EDGE_DNS/g" > edge.ks
+    sed "s/__HOST_IP__/$HOST_IP/g" > edge.ks
 
