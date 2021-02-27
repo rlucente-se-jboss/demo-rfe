@@ -31,7 +31,7 @@ user --name=core --groups=wheel --password=edge --homedir=/var/home/core
 # set up the OSTree-based install with disabled GPG key verification, the base
 # URL to pull the installation content, 'rhel' as the management root in the
 # repo, and 'rhel/8/x86_64/edge' as the branch for the installation
-ostreesetup --nogpg --url=http://__HOST_IP__:8000/repo/ --osname=rhel --remote=edge --ref=rhel/8/x86_64/edge
+ostreesetup --nogpg --url=http://${HOST_IP}:8000/repo/ --osname=rhel --remote=edge --ref=rhel/8/x86_64/edge
 %post
 
 ##
@@ -155,7 +155,7 @@ After=network-online.target
 Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
 ExecStartPre=/bin/rm -f %t/container-httpd.pid %t/container-httpd.ctr-id
-ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-httpd.pid --cidfile %t/container-httpd.ctr-id --cgroups=no-conmon --replace -d --label io.containers.autoupdate=image --name httpd -p 8080:80 __HOST_IP__:5000/httpd:prod
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-httpd.pid --cidfile %t/container-httpd.ctr-id --cgroups=no-conmon --replace -d --label io.containers.autoupdate=image --name httpd -p 8080:80 ${HOST_IP}:5000/httpd:prod
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-httpd.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-httpd.ctr-id
 PIDFile=%t/container-httpd.pid
@@ -170,7 +170,7 @@ cat > /etc/containers/registries.conf <<EOF
 [registries.search]
 registries = ['registry.access.redhat.com', 'registry.redhat.io', 'docker.io']
 [registries.insecure]
-registries = ['__HOST_IP__:5000']
+registries = ['${HOST_IP}:5000']
 [registries.block]
 registries = []
 EOF

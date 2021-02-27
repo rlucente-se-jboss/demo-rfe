@@ -17,10 +17,11 @@ host. Use the following scripts to build the needed environment.
     sudo ./01-setup-rhel8.sh
     reboot
     sudo ./02-config-image-builder.sh
-    ./03-build-containers.sh
+    sudo ./03-build-containers.sh
 
 The above scripts do the following:
 * subscribe to Red Hat for updates
+* enable virtualization
 * install and enable the web console and image builder
 * build two versions of a container app and push both to the local registry
 
@@ -45,16 +46,16 @@ check the status using:
     composer-cli compose status
 
 When the image has a status of FINISHED, create a directory to hold
-the expanded content as well as the needed kickstart file. Download
-its contents using:
+the expanded content as well as the needed kickstart file. Use
+command completion by just pressing the TAB key to make the appropriate
+IMAGE_UUID appear in the below `composer-cli` command.
 
     mkdir -p ~/0.0.1
     cd ~/0.0.1
     composer-cli compose image IMAGE_UUID
 
-Use command completion by just pressing the TAB key for the appropriate
-IMAGE_UUID to appear. Link the `edge.ks` file to the new directory
-and extract the tar file for the image.
+Link the `edge.ks` file to the new directory and extract the tar
+file for the image.
 
     ln -s ../demo-rfe/edge.ks .
     tar xf  *.tar
@@ -63,6 +64,8 @@ After the content is expanded, the directory will have a `compose.json`
 file in addition to the ostree repository. Review the JSON file and
 copy the `ostree-commit` value to the clipboard. You'll use that
 when creating an image derived from this one in the web console.
+
+    jq '.' compose.json
 
 The list of rpm packages included in the commit can be listed via:
 
@@ -122,7 +125,7 @@ the UUID matching version `0.0.2` as shown above.
 Link the `edge.ks` file to the new directory and extract the tar
 file for the image.
 
-    ln -s ../edge.ks .
+    ln -s ../demo-rfe/edge.ks .
     tar xf  *.tar
 
 The list of rpm packages included in the commit can be listed via:
@@ -131,12 +134,22 @@ The list of rpm packages included in the commit can be listed via:
 
 ## Demo
 You're now ready to demonstrate this capability. On the server where
-you built the images, go to the 0.0.1 folder which holds the initial
+you've built the images, go to the 0.0.1 folder which holds the initial
 build and run a simple web server to offer that content to clients:
 
-    python3 -m http.server 8000
+    cd ~/0.0.1
+    ln -s ../demo-rfe/main.go .
+    go run main.go
 
-In a separate terminal launch another VM using the rhel-8.3-x86_64-boot.iso
+Download the [RHEL 8.3 Boot ISO](https://access.redhat.com/downloads/content/479/ver=/rhel---8/8.3/x86_64/product-software)
+and place it in the same directory as this repository.
+
+Launch a separate terminal and then create a guest VM using the
+rhel-8.3-x86_64-boot.iso file.
+
+    cd ~/demo-rfe
+    ./04-launch-edge-guest.sh
+
 and then press tab at the installation screen to customize the
 installation. Append the following to the end of the command line:
 

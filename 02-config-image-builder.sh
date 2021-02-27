@@ -10,9 +10,15 @@ then
     exit 1
 fi
 
+# install RHEL 8 virtualization module
+yum -y module install virt
+
 # install image builder and other necessary packages
 yum -y install osbuild-composer composer-cli cockpit-composer \
-    bash-completion jq
+    bash-completion jq virt-install virt-viewer golang
+
+# enable libvirtd
+systemctl enable --now libvirtd
 
 # enable image builder to start after reboot
 systemctl enable --now cockpit.socket osbuild-composer.socket
@@ -24,6 +30,8 @@ firewall-cmd --permanent --add-port=8000/tcp
 firewall-cmd --reload
 
 # prep the edge.ks file
-cat edge.ks.orig | \
-    sed "s/__HOST_IP__/$HOST_IP/g" > edge.ks
+envsubst < edge.ks.orig > edge.ks
+
+echo "Verify that system is prepared to be a virtualization host"
+virt-host-validate
 
