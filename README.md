@@ -150,7 +150,7 @@ Launch a separate terminal and then create a guest VM using the
 rhel-8.3-x86_64-boot.iso file.
 
     cd ~/demo-rfe
-    ./04-launch-edge-guest.sh
+    ./05-launch-edge-guest.sh
 
 and then press tab at the installation screen to customize the
 installation. Append the following to the end of the command line:
