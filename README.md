@@ -17,12 +17,14 @@ host. Use the following scripts to build the needed environment.
     sudo ./01-setup-rhel8.sh
     reboot
     sudo ./02-config-image-builder.sh
-    sudo ./03-build-containers.sh
+    sudo ./03-config-registry.sh
+    ./04-build-containers.sh
 
 The above scripts do the following:
 * subscribe to Red Hat for updates
 * enable virtualization
 * install and enable the web console and image builder
+* enable a local insecure registry on the host
 * build two versions of a container app and push both to the local registry
 
 ## Compose the os-tree images
