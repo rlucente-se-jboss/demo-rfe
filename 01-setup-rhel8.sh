@@ -17,6 +17,6 @@ subscription-manager service-level --set="Self-Support"
 subscription-manager usage --set="Development/Test"
 subscription-manager attach
 
-yum -y update
-yum -y clean all
+dnf -y update
+dnf -y clean all
 
