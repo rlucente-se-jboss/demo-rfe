@@ -11,9 +11,9 @@ then
 fi
 
 #
-# Install needed executables using the recommended module
+# Install using the recommended module
 #
-yum -y module install container-tools
+dnf -y module install container-tools
 
 #
 # Setup for a local insecure registry
@@ -24,17 +24,20 @@ firewall-cmd --reload
 mkdir -p /var/lib/registry
 sed -i.bak '/\[registries.insecure\]/!b;n;cdummy' \
     /etc/containers/registries.conf
-sed -i "s/dummy/registries = ['"$HOST_IP":5000']/g" \
+sed -i "s/dummy/registries = ['"$HOSTIP":5000']/g" \
     /etc/containers/registries.conf
 
 #
-# Create systemd unit files for both service and socket
+# Create systemd unit files for registry service
 #
 CTR_ID=$(podman run --privileged -d --name registry -p 5000:5000 -v /var/lib/registry:/var/lib/registry:Z --restart=always docker.io/library/registry:2)
 podman generate systemd --new --files --name $CTR_ID
+
+#
+# Clean up running containers
+#
 podman stop --all
 podman rm -f --all
-podman rmi -f --all
 
 #
 # Enable registry service
