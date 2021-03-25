@@ -152,6 +152,14 @@ build and run a simple web server to offer that content to clients:
     cd ~/0.0.1
     go run ../demo-rfe/main.go
 
+Edit your `$HOME/.bashrc` file and add the following stanza:
+
+    if ! [[ "$PATH" =~ "/opt/qemu-5.2.0/bin:" ]]
+    then
+        PATH="/opt/qemu-5.2.0/bin:$PATH"
+    fi
+    export PATH
+
 Launch a separate terminal and then create a RHEL for Edge guest VM.
 
     cd ~/demo-rfe
