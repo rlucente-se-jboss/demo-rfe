@@ -6,9 +6,12 @@ import (
 )
 
 func main() {
+	var count int
+
 	fs := http.FileServer(http.Dir("./"))
 	logFileServer := func(w http.ResponseWriter, req *http.Request) {
-		log.Println(req.URL.Path)
+		count += 1
+		log.Printf("%05d %s\n", count, req.URL.Path)
 		fs.ServeHTTP(w, req)
 	}
 
