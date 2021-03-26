@@ -11,7 +11,7 @@ func main() {
 	fs := http.FileServer(http.Dir("./"))
 	logFileServer := func(w http.ResponseWriter, req *http.Request) {
 		count += 1
-		log.Printf("%05d %s\n", count, req.URL.Path)
+		log.Printf("%5d %s\n", count, req.URL.Path)
 		fs.ServeHTTP(w, req)
 	}
 
