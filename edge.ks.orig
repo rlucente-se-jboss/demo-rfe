@@ -115,7 +115,7 @@ cat > /etc/systemd/system/podman-auto-update.service << EOF
 [Unit]
 Description=Podman auto-update service
 Documentation=man:podman-auto-update(1)
-Wants=network.target
+Requires=network.target
 After=network-online.target
 
 [Service]
