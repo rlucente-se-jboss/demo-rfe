@@ -61,7 +61,7 @@ echo AutomaticUpdatePolicy=stage >> /etc/rpm-ostreed.conf
 # This systemd service runs one time and exits after each timer
 # event. If there are staged updates to the operating system, the
 # system is rebooted to apply them.
-cat > /etc/systemd/system/applyupdate.service << 'EOF'
+cat > /etc/systemd/system/applyupdate.service <<EOF
 [Unit]
 Description=Apply Update Check
 
@@ -72,7 +72,7 @@ EOF
 
 # This systemd timer activates every minute to check for staged
 # updates to the operating system
-cat > /etc/systemd/system/applyupdate.timer << EOF
+cat > /etc/systemd/system/applyupdate.timer <<EOF
 [Unit]
 Description=Daily Update Reboot Check.
 
@@ -111,7 +111,7 @@ systemctl enable rpm-ostreed-automatic.timer applyupdate.timer
 # be updated, Podman pulls it down and restarts the systemd unit
 # executing the container.
 
-cat > /etc/systemd/system/podman-auto-update.service << EOF
+cat > /etc/systemd/system/podman-auto-update.service <<EOF
 [Unit]
 Description=Podman auto-update service
 Documentation=man:podman-auto-update(1)
@@ -126,7 +126,7 @@ WantedBy=multi-user.target default.target
 EOF
 
 # This timer ensures podman auto-update is run every minute
-cat > /etc/systemd/system/podman-auto-update.timer << EOF
+cat > /etc/systemd/system/podman-auto-update.timer <<EOF
 [Unit]
 Description=Podman auto-update timer
 
