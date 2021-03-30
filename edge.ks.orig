@@ -23,7 +23,7 @@ poweroff
 text
 
 # activate network devices and configure with DHCP
-network --bootproto=dhcp
+network --bootproto=dhcp --noipv6
 
 # Kickstart requires that we create default user 'core' with sudo
 # privileges using password 'edge'

@@ -22,7 +22,7 @@ sudo mount $ISO_PATH /media/cdrom -o loop
 qemu-system-x86_64 \
     -kernel /media/cdrom/isolinux/vmlinuz \
     -initrd /media/cdrom/isolinux/initrd.img \
-    -append "inst.text inst.ks=http://$HOSTIP:8000/edge.ks ip.method=dhcp console=ttyS0" \
+    -append "inst.text inst.ks=http://$HOSTIP:8000/edge.ks console=ttyS0 ipv6.disable=1" \
     -serial mon:stdio \
     -nographic \
     -m $MEM_SIZE \
