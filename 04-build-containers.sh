@@ -3,9 +3,9 @@
 . $(dirname $0)/demo.conf
 
 #
-# We need to temporarily add the $HOSTIP to the network interface
-# to push the images to our server. This interface will be available
-# when the edge guest is running later with SLiRP networking.
+# We need to add the $HOSTIP to the network interface to push the
+# images to our server. This same address will be available when the
+# edge guest is running later with SLiRP networking.
 #
 ETHDEV=$(ip route get 8.8.8.8 | sed 's/.*dev //g' | awk '{print $1;exit}')
 sudo nmcli con mod $ETHDEV +ipv4.addresses $HOSTIP/24
@@ -40,11 +40,4 @@ buildah copy $CTR_ID index.html /var/www/html/index.html
 buildah commit $CTR_ID $HOSTIP:5000/httpd:v2
 
 podman push $HOSTIP:5000/httpd:v2
-
-#
-# Remove the $HOSTIP
-#
-sudo nmcli con mod $ETHDEV -ipv4.addresses $HOSTIP/24
-sudo nmcli con down $ETHDEV
-sudo nmcli con up $ETHDEV
 
