@@ -61,7 +61,7 @@ echo AutomaticUpdatePolicy=stage >> /etc/rpm-ostreed.conf
 # This systemd service runs one time and exits after each timer
 # event. If there are staged updates to the operating system, the
 # system is rebooted to apply them.
-cat > /etc/systemd/system/applyupdate.service <<EOF
+cat > /etc/systemd/system/applyupdate.service << 'EOF'
 [Unit]
 Description=Apply Update Check
 
