@@ -115,7 +115,7 @@ cat > /etc/systemd/system/podman-auto-update.service <<EOF
 [Unit]
 Description=Podman auto-update service
 Documentation=man:podman-auto-update(1)
-Requires=network.target
+Requires=network-online.target
 After=network-online.target
 
 [Service]
@@ -163,7 +163,7 @@ cat > /etc/systemd/system/container-httpd.service <<EOF
 [Unit]
 Description=Podman container-httpd.service
 Documentation=man:podman-generate-systemd(1)
-Requires=network.target
+Requires=network-online.target
 After=network-online.target
 
 [Service]
