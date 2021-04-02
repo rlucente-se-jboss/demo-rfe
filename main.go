@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-const MiB = 1024 * 1024
+const MB = 1000 * 1000
 
 func main() {
 	var count int
@@ -18,10 +18,10 @@ func main() {
 
 		fileInfo, err := os.Stat("." + req.URL.Path)
 		if err == nil {
-			total += float64(fileInfo.Size()) / MiB
+			total += float64(fileInfo.Size()) / MB
 		}
 
-		log.Printf("%5d  %7.3f MiB  %s\n", count, total, req.URL.Path)
+		log.Printf("%5d  %7.3f MB  %s\n", count, total, req.URL.Path)
 		fs.ServeHTTP(w, req)
 	}
 
