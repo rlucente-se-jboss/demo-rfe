@@ -9,25 +9,27 @@ in those environments as well.
 To begin, we'll relaunch our recently installed edge device. The
 included bash script takes care of the various command line options
 for QEMU. Feel free to review the script prior to running it. In a
-terminal window, issue the commands:
+host terminal, issue the commands:
 
     cd ~/demo-rfe
     less 07-launch-edge-guest.sh
 
-When you're ready, go ahead an launch the emulated edge device that
-was installed in the previous lab.
+Please start an edge guest in the same terminal. This terminal will
+serve at the guest terminal when needed for additional commands
+below. Type the following commands in the host terminal to launch
+the edge guest:
 
     ./07-launch-edge-guest.sh
 
 The serial console output for the edge device is redirected to the
-terminal window so you can observe all of the boot output. When the
-system login prompt appears, log into the emulated edge guest using
-username `core` and password `edge`.
+terminal so you can observe all of the boot output. When the system
+login prompt appears, log into the emulated edge guest using username
+`core` and password `edge`.
 
 The edge device has a simple container web application that returns
 static content. You'll need to confirm that the container application
-has fully started. In the same terminal window, type the following
-commands to see if the container web application is fully active.
+has fully started. In the same terminal, type the following commands
+to see if the container web application is fully active.
 
     systemctl status container-httpd.service
     sudo watch -n 5 podman container list
@@ -42,8 +44,8 @@ produce output similar to the following:
     64c18d270b65  192.168.76.2:5000/httpd:prod  /usr/sbin/httpd -...  3 minutes ago
      Up 3 minutes ago  0.0.0.0:8080->80/tcp  httpd
 
-In the terminal window, press the key combination `CTRL-C` to
-terminate the `watch` command after the container is fully started.
+In the terminal, press the key combination `CTRL-C` to terminate
+the `watch` command after the container is fully started.
 
 The systemd configuration for our container web service has the
 policy `Restart=on-failure`. If the program should unexpectedly
@@ -51,7 +53,7 @@ fail, systemd will restart it. However, if the program normally
 exits, it will not be restarted. The policy can also be modified
 to cover many use cases as we'll see in a minute. Let's go ahead
 and trigger a restart of our container web application. In the
-terminal window, type the following command:
+terminal, type the following command:
 
     sudo pkill -9 httpd
 
@@ -79,21 +81,20 @@ has no man pages installed to reduce space).
  Watchdog                     |    |   X    |            |     X      |     X       |          |     X       
 
 Once again, please confirm that the container application has fully
-started. In the same terminal window, type the following commands
-to see if the container web application is fully active.
+started. In the same terminal, type the following commands to see
+if the container web application is fully active.
 
     systemctl status container-httpd.service
     sudo watch -n 5 podman container list
 
-In the guest terminal window, press the key combination `CTRL-C`
-to terminate the `watch` command after the container is fully
-started.
+In the guest terminal, press the key combination `CTRL-C` to terminate
+the `watch` command after the container is fully started.
 
 Next, let's take a look at how `podman auto-update` can ensure that
 we're running the most up-to-date version of our container application.
 We'll begin by examining the contents returned by the current
-container web application. In the same guest terminal window, type
-the following command:
+container web application. In the same guest terminal, type the
+following command:
 
     curl http://localhost:8080
 
@@ -104,7 +105,7 @@ The output from that command should look like the following:
 Let's take a look at which container image our container web
 application is using. This application was defined to launch at
 boot time and runs as root. To list the container images, please
-type the following command in the guest terminal window:
+type the following command in the guest terminal:
 
     sudo podman images
 
@@ -117,7 +118,7 @@ twelve characters of a much longer hash value for the image.
 
 To upgrade our container web application we're first going to move
 the `prod` tag a newer image within the `httpd` image repository.
-In the host terminal window, please type the following commands:
+In the host terminal, please type the following commands:
 
     podman pull --all-tags 192.168.76.2:5000/httpd
     podman images
@@ -168,19 +169,18 @@ configured to expire every minute.
 The container web application is pulling the image with the `prod`
 tag. Since we just changed, you should see the restart occur. Please
 confirm that the container application has fully started. In the
-guest terminal window, type the following commands to see if the
-container web application is fully active.
+guest terminal, type the following commands to see if the container
+web application is fully active.
 
     systemctl status container-httpd.service
     sudo watch -n 5 podman container list
 
-In the guest terminal window, press the key combination `CTRL-C`
-to terminate the `watch` command after the container is fully
-started.
+In the guest terminal, press the key combination `CTRL-C` to terminate
+the `watch` command after the container is fully started.
 
 List the images to verify that the the image with the `prod` tag
 now matches the `IMAGE ID` that was with the `v2` tag. Type the
-following command in the guest terminal window:
+following command in the guest terminal:
 
     sudo podman images
 
